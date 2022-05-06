@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { aggTask, riceviTask, arrayToDo } from "../service/todos.service";
+import { aggTask, riceviTask, arrayToDo, ricerca1, addiz, sottr } from "../service/todos.service";
 
 @Component({
   template: `
@@ -13,11 +13,21 @@ import { aggTask, riceviTask, arrayToDo } from "../service/todos.service";
       </div>
       <div>
         <ul *ngFor="let item of expArrToDo">
-          <li *ngIf="item.completed === false" class="ps-3 fs-5 mt-3 d-flex justify-content-between w-50 mx-auto bg-light rounded-pill border border-dark">
-            {{ item.title }}<button class="btn btn-md btn-success rounded-pill w-25 fw-bold" (click)="taskFatto(item.id)">Fatto</button>
+          <li *ngIf="item.completed === false" class="py-1 fs-5 mt-3 d-flex justify-content-between w-50 mx-auto bg-light rounded-pill border border-dark">
+            <span *ngIf="item.modificated === false" class="align-self-center ps-4 fw-bold">{{ item.title }}</span>
+            <input type="text" *ngIf="item.modificated === true" [(ngModel)]="item.title" class="rounded-pill ps-3 ms-1" />
+            <div class="me-2">
+              <button class="btn btn-md btn-warning rounded-pill w-50 fw-bold pe-5 border" (click)="item.modificated = true" *ngIf="item.modificated === false">
+                Modifica
+              </button>
+              <button class="btn btn-md btn-info rounded-pill w-100 fw-bold pe-6 border" (click)="item.modificated = false" *ngIf="item.modificated === true">
+                Applica Modifiche
+              </button>
+              <button class="btn btn-md btn-success rounded-pill w-50 fw-bold" (click)="taskFatto(item.id)" *ngIf="item.modificated === false">Fatto</button>
+            </div>
           </li>
         </ul>
-        <p *ngIf="expArrToDo.length === 0" class="fs-3">{{ ricerca }}</p>
+        <p *ngIf="cerca === 0" class="fs-3 mt-3">{{ ricerca }}</p>
       </div>
     </div>
   `,
@@ -36,12 +46,12 @@ export class TodoComponent implements OnInit {
   ricerca = "Ricerca di Tasks...";
   nomeTask = "";
   expArrToDo = arrayToDo;
+  cerca = ricerca1;
 
   constructor() {
     riceviTask().then((resp) => {
       this.expArrToDo = resp;
     });
-    console.log(this.expArrToDo);
   }
 
   ngOnInit(): void {
@@ -50,7 +60,7 @@ export class TodoComponent implements OnInit {
 
   aggiorna() {
     setTimeout(() => {
-      if (this.expArrToDo.length === 0) {
+      if (this.cerca === 0) {
         this.ricerca = "Nessuna task";
       } else {
         this.ricerca = "";
@@ -59,14 +69,21 @@ export class TodoComponent implements OnInit {
   }
 
   add(todo: string) {
+    addiz();
     aggTask(todo);
     setTimeout(() => {
+      this.cerca = ricerca1;
       this.nomeTask = "";
     }, 2000);
   }
 
   taskFatto(num: number) {
     this.expArrToDo[num - 1].completed = true;
-    console.log(this.expArrToDo);
+    sottr();
+    this.cerca = ricerca1;
+
+    if (this.cerca === 0) {
+      this.aggiorna();
+    }
   }
 }

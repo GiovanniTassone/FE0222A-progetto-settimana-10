@@ -12,7 +12,7 @@ import { aggTask, riceviTask, arrayToDo } from "../service/todos.service";
         <p id="stampaRisultato" class="fs-3 text-center" [innerText]="ricercaAgg"></p>
       </div>
       <ul *ngFor="let item of arTodo">
-        <li *ngIf="item.completed === true" class="fs-5 mt-3 text-center w-25 mx-auto rounded-pill complPers">
+        <li *ngIf="item.completed === true" class="align-self-center fs-5 mt-3 text-center w-25 mx-auto rounded-pill complPers border border-dark">
           {{ item.title }}
         </li>
       </ul>
@@ -23,6 +23,10 @@ import { aggTask, riceviTask, arrayToDo } from "../service/todos.service";
       .complPers {
         background: linear-gradient(90deg, rgba(13, 110, 0, 1) 0%, rgba(26, 167, 0, 1) 100%);
         color: white;
+        box-shadow: 5px 10px 10px #888888;
+      }
+      ul {
+        padding-left: unset;
       }
     `,
   ],
