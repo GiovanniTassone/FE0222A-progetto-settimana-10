@@ -12,8 +12,14 @@ import { aggTask, riceviTask, arrayToDo } from "../service/todos.service";
         <p id="stampaRisultato" class="fs-3 text-center" [innerText]="ricercaAgg"></p>
       </div>
       <ul *ngFor="let item of arTodo">
-        <li *ngIf="item.completed === true" class="align-self-center fs-5 mt-3 text-center w-25 mx-auto rounded-pill complPers border border-dark">
+        <li
+          *ngIf="item.completed === true && item.modificated === false"
+          class="text-capitalize align-self-center fs-5 ps-3 py-1 align-items-center mt-3 text-center w-25 mx-auto rounded-pill complPers border border-dark d-flex justify-content-between"
+        >
           {{ item.title }}
+          <div>
+            <button class="btn btn-danger rounded-pill me-1" (click)="cancella(item.id)">Elimina</button>
+          </div>
         </li>
       </ul>
     </div>
@@ -66,5 +72,9 @@ export class CompletatiComponent implements OnInit {
     } else {
       this.ricercaCompletati();
     }
+  }
+
+  cancella(id: number) {
+    this.arTodo[id - 1].modificated = true;
   }
 }
